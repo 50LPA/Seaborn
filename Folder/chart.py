@@ -1,43 +1,42 @@
+# chart.py
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 
-# Set professional Seaborn style
-sns.set_style("whitegrid")
-sns.set_context("talk")
-
-# Generate synthetic marketing campaign data
+# -----------------------------
+# 1. Generate synthetic seasonal revenue data
+# -----------------------------
 np.random.seed(42)
-n = 150
 
-data = pd.DataFrame({
-    "Marketing_Spend": np.random.normal(50, 15, n).clip(10, 100),
-    "Engagement_Score": np.random.normal(60, 20, n).clip(0, 100),
-    "Campaign_Type": np.random.choice(["Email", "Social Media", "Paid Ads"], n, p=[0.3, 0.4, 0.3])
+months = pd.date_range("2024-01-01", periods=24, freq="M")
+revenue = 100 + 10*np.sin(np.linspace(0, 4*np.pi, 24)) + np.random.normal(0, 3, 24)
+
+df = pd.DataFrame({
+    "Month": months,
+    "Revenue": revenue
 })
 
-# Add a sequential campaign day for lineplot
-data["Campaign_Day"] = np.arange(1, n + 1)
+# -----------------------------
+# 2. Set Seaborn styling
+# -----------------------------
+sns.set_style("whitegrid")
+sns.set_context("talk")
+palette = sns.color_palette("crest")
 
-# Create figure with size for 512x512 output
-plt.figure(figsize=(8, 8))
+# -----------------------------
+# 3. Create professional lineplot
+# -----------------------------
+plt.figure(figsize=(8, 8))  # ensures 512x512 with dpi=64
+sns.lineplot(data=df, x="Month", y="Revenue", marker="o", palette=palette)
 
-# Create lineplot
-sns.lineplot(
-    data=data,
-    x="Campaign_Day",
-    y="Engagement_Score",
-    hue="Campaign_Type",
-    palette="Set2",
-    linewidth=2.5
-)
+plt.title("Seasonal Revenue Trends", fontsize=18, weight="bold")
+plt.xlabel("Month")
+plt.ylabel("Revenue (in $K)")
+plt.xticks(rotation=45)
 
-# Add titles and labels
-plt.title("Engagement Trend Over Campaign Days", fontsize=18, weight="bold")
-plt.xlabel("Campaign Day", fontsize=14)
-plt.ylabel("Customer Engagement Score", fontsize=14)
-
-# Save exactly 512x512 image
+# -----------------------------
+# 4. Save chart
+# -----------------------------
 plt.savefig("chart.png", dpi=64, bbox_inches="tight")
 plt.close()
