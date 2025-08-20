@@ -12,7 +12,7 @@ sns.set_context("talk")
 
 # Generate synthetic business data: Seasonal revenue pattern
 np.random.seed(42)
-months = pd.date_range(start="2023-01-01", periods=12, freq="M")
+months = pd.date_range(start="2023-01-01", periods=12, freq="ME")
 revenue = (
     20000 + 5000 * np.sin(np.linspace(0, 2 * np.pi, 12))  # seasonal trend
     + np.linspace(0, 4000, 12)  # growth trend
@@ -32,7 +32,6 @@ sns.lineplot(
     y="Revenue",
     marker="o",
     linewidth=2.5,
-    palette="deep",
     color="royalblue"
 )
 
